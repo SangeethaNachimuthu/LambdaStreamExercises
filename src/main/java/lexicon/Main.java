@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Main {
 
+    //private static final PersonProcessor processor = new PersonProcessor();
+
     public static PersonRule isActive = Person::isActive;
     public static PersonRule isAdults = person -> person.getAge() >= 18;
     public static PersonRule livesInStockholm = person ->
@@ -30,6 +32,8 @@ public class Main {
                 new Person("Omar", 19, "Stockholm", true)
         );
 
+
+
         printResult(people);
 
         System.out.println("\n----------------Results----------------");
@@ -45,6 +49,7 @@ public class Main {
 
         System.out.println("\nPeople Name: ");
         filterPeopleAndUpdate(people, isAdults, printNameAction);
+
 
         System.out.println("\nSend Email: ");
         filterPeopleAndUpdate(people, isAdults, sendEmailAction);
@@ -65,29 +70,16 @@ public class Main {
         }
     }
 
-
     public static List<Person> filterPeople(List<Person> people, PersonRule rule) {
 
-        List<Person> filteredPeople = new ArrayList<>();
-
-        for (Person p : people) {
-            if (rule.matches(p)) {
-                filteredPeople.add(p);
-            }
-        }
-        return filteredPeople;
+        PersonProcessor processor = new PersonProcessor();
+        return processor.findPeople(people, isActive);
     }
 
     public static void filterPeopleAndUpdate(List<Person> people, PersonRule rule, PersonAction action) {
 
-        List<Person> filteredPeople = new ArrayList<>();
-
-        for (Person p : people) {
-            if (rule.matches(p)) {
-                action.run(p);
-                filteredPeople.add(p);
-            }
-        }
+        PersonProcessor processor = new PersonProcessor();
+        processor.applyToMatching(people, isActive, action);
     }
 
 
