@@ -5,13 +5,19 @@ import java.util.List;
 
 public class Main {
 
-    public static PersonRule activePersons = Person::isActive;
-    public static PersonRule adults = person -> person.getAge() >= 18;
+    public static PersonRule isActive = Person::isActive;
+    public static PersonRule isAdults = person -> person.getAge() >= 18;
     public static PersonRule livesInStockholm = person ->
             person.getCity().equalsIgnoreCase("Stockholm");
-    public static PersonAction printName = person -> System.out.println(person.getName());
-    public static PersonAction sendEmail = person ->
+    public static PersonAction printNameAction = person -> System.out.println(person.getName());
+    public static PersonAction sendEmailAction = person ->
             System.out.println("Send email to " + person.getName());
+    public static PersonRule activeAndAdult = person ->
+            (person.isActive() && person.getAge() >= 18);
+    public static PersonRule adultOrLivesInStockholm = person ->
+            (person.getAge() >= 18 || person.getCity().equalsIgnoreCase("Stockholm"));
+    public static PersonRule notActive = person -> !person.isActive();
+
 
     void main() {
 
@@ -29,19 +35,28 @@ public class Main {
         System.out.println("\n----------------Results----------------");
 
         System.out.println("\nActive Persons: ");
-        printResult(filterPeople(people, activePersons));
+        printResult(filterPeople(people, isActive));
 
         System.out.println("\nAdults: ");
-        printResult(filterPeople(people, adults));
+        printResult(filterPeople(people, isAdults));
 
         System.out.println("\nPeople live in Stockholm: ");
         printResult(filterPeople(people, livesInStockholm));
 
         System.out.println("\nPeople Name: ");
-        filterPeopleAndUpdate(people, adults, printName);
+        filterPeopleAndUpdate(people, isAdults, printNameAction);
 
         System.out.println("\nSend Email: ");
-        filterPeopleAndUpdate(people, adults, sendEmail);
+        filterPeopleAndUpdate(people, isAdults, sendEmailAction);
+
+        System.out.println("\nActive And Adult: ");
+        printResult(filterPeople(people, activeAndAdult));
+
+        System.out.println("\nAdult or Lives in Stockholm: ");
+        printResult(filterPeople(people, adultOrLivesInStockholm));
+
+        System.out.println("\nNot Active Persons: ");
+        printResult(filterPeople(people, notActive));
     }
 
     public static void printResult(List<Person> people) {
