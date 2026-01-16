@@ -3,5 +3,5 @@ package lexicon;
 @FunctionalInterface
 public interface PersonRule {
 
-    public boolean filterPeople(Person person);
+    public boolean matches(Person person);
 }
