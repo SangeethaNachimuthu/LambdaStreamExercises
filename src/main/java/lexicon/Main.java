@@ -9,6 +9,9 @@ public class Main {
     public static PersonRule adults = person -> person.getAge() >= 18;
     public static PersonRule livesInStockholm = person ->
             person.getCity().equalsIgnoreCase("Stockholm");
+    public static PersonAction printName = person -> System.out.println(person.getName());
+    public static PersonAction sendEmail = person ->
+            System.out.println("Send email to " + person.getName());
 
     void main() {
 
@@ -33,6 +36,12 @@ public class Main {
 
         System.out.println("\nPeople live in Stockholm: ");
         printResult(filterPeople(people, livesInStockholm));
+
+        System.out.println("\nPeople Name: ");
+        filterPeopleAndUpdate(people, adults, printName);
+
+        System.out.println("\nSend Email: ");
+        filterPeopleAndUpdate(people, adults, sendEmail);
     }
 
     public static void printResult(List<Person> people) {
@@ -42,15 +51,29 @@ public class Main {
     }
 
 
-    public static List<Person> filterPeople(List<Person> people, PersonRule filter) {
+    public static List<Person> filterPeople(List<Person> people, PersonRule rule) {
 
         List<Person> filteredPeople = new ArrayList<>();
 
         for (Person p : people) {
-            if (filter.matches(p)) {
+            if (rule.matches(p)) {
                 filteredPeople.add(p);
             }
         }
         return filteredPeople;
     }
+
+    public static void filterPeopleAndUpdate(List<Person> people, PersonRule rule, PersonAction action) {
+
+        List<Person> filteredPeople = new ArrayList<>();
+
+        for (Person p : people) {
+            if (rule.matches(p)) {
+                action.run(p);
+                filteredPeople.add(p);
+            }
+        }
+    }
+
+
 }
